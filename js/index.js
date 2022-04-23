@@ -16,13 +16,13 @@ import("../pkg/index.js")
 
       const colors = {
         0: "#000000",
-        1: "#780737",
-        2: "#d29708",
-        3: "#125f03",
-        4: "#e9e2c7",
-        5: "#9b6928",
-        6: "#1c7180",
-        7: "#569f1b",
+        1: "#780737", // #662211, #332211,
+        2: "#d29708", // #ccaa22, #ddaacc,
+        3: "#125f03", // #557733, #cc4433,
+        4: "#e9e2c7", // #3333dd, #88ddee,
+        5: "#9b6928", // #3333dd, #88ddee,
+        6: "#1c7180", // #7755cc, #dd9977,
+        7: "#569f1b", // #7755cc, #dd9977,
       };
 
       window.addEventListener("resize", (e) => {
@@ -63,27 +63,35 @@ import("../pkg/index.js")
       });
 
       function startScreen() {
-        for (let i = 0; i < 6; i++) {
-          for (let j = 0; j < 6; j++) {
-            ctx.fillStyle = `rgb(
-              ${Math.floor(255 - 42.5 * i)},
-              ${Math.floor(255 - 42.5 * j)},
-              0)`;
-            ctx.fillRect(
-              j * 25 + CELL_SIZE * 4,
-              i * 25 + CELL_SIZE * 4,
-              25,
-              25
-            );
-          }
-        }
+        ctx.fillStyle = "#5ff2ef";
+        ctx.font = "40px 'Press Start 2P'";
+        ctx.fillText("Detris", canvas.width * 0.2, canvas.height * 0.3);
 
-        ctx.fillStyle = "#ff0000";
-        ctx.font = "50px serif";
-        ctx.fillText("Hello", 100, 200);
+        ctx.fillStyle = "#ff5050";
+        ctx.font = "40px 'Press Start 2P'";
+        ctx.fillText("Detris", canvas.width * 0.2 - 8, canvas.height * 0.3 - 4);
 
-        ctx.font = "20px serif";
-        ctx.fillText("Hit space to start", 100, 400);
+        ctx.fillStyle = "#ffffff"
+        ctx.font = "22px 'Press Start 2P'";
+        ctx.fillText("Hit space", canvas.width * 0.25, canvas.height * 0.5);
+        ctx.fillText("to start", canvas.width * 0.27, canvas.height * 0.5 + 30);
+
+
+        ctx.font = "15px 'Press Start 2P'";
+        ctx.fillText("by finiam", canvas.width * 0.35, canvas.height * 0.9);
+
+        ctx.strokeStyle = 'blue'
+        ctx.strokeRect(0, CELL_SIZE * 4, canvas.width, canvas.height - CELL_SIZE * 4)
+
+        Object.values(colors).map((color, index) => {
+          ctx.fillStyle = color;
+          ctx.fillRect(
+            25 + (CELL_SIZE + 4) * index,
+            canvas.height * 0.7,
+            CELL_SIZE,
+            CELL_SIZE,
+          );
+        })
       }
 
       function endScreen() {
@@ -132,6 +140,11 @@ import("../pkg/index.js")
             const idx = col * 24 + row;
 
             ctx.fillStyle = colors[screen[idx]] || "#0000000";
+            // ctx.shadowColor = screen[idx] !== 0 ? 'red' : "white";
+            // ctx.shadowOffsetX = screen[idx] !== 0 ? 1 : 1;
+            // ctx.shadowOffsetY = screen[idx] !== 0 ? 1 : 1;
+            // ctx.shadowColor = 'white';
+            // ctx.shadowBlur = screen[idx] !== 0 ? 30 : 20;
             ctx.fillRect(
               col * (CELL_SIZE + 2) + 2,
               row * (CELL_SIZE + 2) + 2,
