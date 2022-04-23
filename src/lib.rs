@@ -376,7 +376,7 @@ impl Game {
         return qrcode_generator::to_svg_to_string_from_str(
             self.inputs.clone(),
             QrCodeEcc::Low,
-            96,
+            1024,
             Some("QR Code"),
         )
         .unwrap();

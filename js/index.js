@@ -8,13 +8,13 @@ import("../pkg/index.js")
       let qrcode = undefined;
 
       let CELL_SIZE = Math.min(
-        (window.innerHeight - 100) / 20,
-        (window.innerWidth - 100) / 10
+        (window.innerHeight - 75) / 20,
+        (window.innerWidth - 20) / 10
       );
       const canvas = document.getElementById("tetris-canvas");
       canvas.width = 10 * (CELL_SIZE + 2) + 2;
       canvas.height = 24 * (CELL_SIZE + 2) + 2;
-      canvas.minWidth = '350px';
+      canvas.minWidth = "350px";
       canvas.style.marginTop = `${CELL_SIZE * -4}px`;
 
       const ctx = canvas.getContext("2d");
@@ -32,8 +32,8 @@ import("../pkg/index.js")
 
       window.addEventListener("resize", (e) => {
         CELL_SIZE = Math.min(
-          (window.innerHeight - 100) / 20,
-          (window.innerWidth - 100) / 10
+          (window.innerHeight - 75) / 20,
+          (window.innerWidth - 20) / 10
         );
         canvas.width = 10 * (CELL_SIZE + 2) + 2;
         canvas.height = 24 * (CELL_SIZE + 2) + 2;
@@ -113,6 +113,7 @@ import("../pkg/index.js")
 
       function endScreen() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
         ctx.fillStyle = "#5ff2ef";
         ctx.font = "40px 'Press Start 2P'";
         ctx.fillText("Detris", canvas.width * 0.2, canvas.height * 0.3);
@@ -124,23 +125,24 @@ import("../pkg/index.js")
         ctx.fillStyle = "#ffffff";
         ctx.font = "22px 'Press Start 2P'";
         ctx.fillText(
-          `Score: ${score}`,
+          `Score:${score}`,
           canvas.width * 0.25,
           canvas.height * 0.5
         );
 
         ctx.fillStyle = "#ffffff";
         ctx.font = "10px 'Press Start 2P'";
-        ctx.fillText(
-          `Moves:`,
-          canvas.width * 0.2,
-          canvas.height * 0.6
-        );
 
         ctx.font = "15px 'Press Start 2P'";
         ctx.fillText("by finiam", canvas.width * 0.35, canvas.height * 0.9);
 
-        ctx.drawImage(qrcode, canvas.width * 0.5 - 50, canvas.height * 0.5 + 50);
+        ctx.drawImage(
+          qrcode,
+          canvas.width * 0.5 - 50,
+          canvas.height * 0.5 + 50,
+          120,
+          120
+        );
 
         ctx.strokeStyle = "blue";
         ctx.strokeRect(
@@ -167,6 +169,10 @@ import("../pkg/index.js")
       }
 
       function draw() {
+        if (status == "play" && document.querySelector("textarea")) {
+          document.querySelector("textarea").remove();
+        }
+
         if (status === "begin") {
           startScreen();
 
@@ -221,10 +227,18 @@ import("../pkg/index.js")
             inputs = game.inputs();
             svg = game.generate_qrcode();
 
-            blob = new Blob([svg.slice(38)], {type: 'image/svg+xml'});
+            const moves = document.createElement("textarea");
+            moves.setAttribute("spellcheck", "false");
+            moves.addEventListener("click", (e) => {
+              e.target.select();
+            });
+            moves.value = inputs.slice(12);
+            document.body.append(moves);
+
+            blob = new Blob([svg.slice(38)], { type: "image/svg+xml" });
 
             qrcode = new Image();
-            qrcode.src = URL.createObjectURL(blob)
+            qrcode.src = URL.createObjectURL(blob);
 
             game.tick_delay = 500;
             game = wasm.Game.new();
