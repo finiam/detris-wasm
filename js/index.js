@@ -240,7 +240,7 @@ import("../pkg/index.js")
             qrcode = new Image();
             qrcode.src = URL.createObjectURL(blob);
 
-            game.tick_delay = 500;
+            game.tick_delay = 400;
             game = wasm.Game.new();
           }
         }
