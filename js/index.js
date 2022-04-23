@@ -13,6 +13,7 @@ import("../pkg/index.js")
       const canvas = document.getElementById("tetris-canvas");
       canvas.width = 10 * (CELL_SIZE + 2) + 2;
       canvas.height = 24 * (CELL_SIZE + 2) + 2;
+      canvas.minWidth = '350px';
       canvas.style.marginTop = `${CELL_SIZE * -4}px`;
 
       const ctx = canvas.getContext("2d");
@@ -93,6 +94,11 @@ import("../pkg/index.js")
         );
 
         Object.values(colors).map((color, index) => {
+          // ctx.shadowColor = index !== 0 ? 'red' : "white";
+          // ctx.shadowOffsetX = index !== 0 ? 1 : 1;
+          // ctx.shadowOffsetY = index !== 0 ? 1 : 1;
+          // ctx.shadowColor = 'white';
+          // ctx.shadowBlur = index !== 0 ? 30 : 20;
           ctx.fillStyle = color;
           ctx.fillRect(
             25 + (CELL_SIZE + 4) * index,
@@ -101,6 +107,7 @@ import("../pkg/index.js")
             CELL_SIZE
           );
         });
+        ctx.shadowBlur = 0;
       }
 
       function endScreen() {
@@ -141,6 +148,11 @@ import("../pkg/index.js")
         );
 
         Object.values(colors).map((color, index) => {
+          // ctx.shadowColor = index !== 0 ? 'red' : "white";
+          // ctx.shadowOffsetX = index !== 0 ? 1 : 1;
+          // ctx.shadowOffsetY = index !== 0 ? 1 : 1;
+          // ctx.shadowColor = 'white';
+          // ctx.shadowBlur = index !== 0 ? 30 : 20;
           ctx.fillStyle = color;
           ctx.fillRect(
             25 + (CELL_SIZE + 4) * index,
