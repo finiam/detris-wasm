@@ -16,11 +16,13 @@ import("../pkg/index.js")
       canvas.height = 24 * (CELL_SIZE + 2) + 2;
       canvas.minWidth = "350px";
       document.body.style.transform = `translateY(${CELL_SIZE * -4}px)`;
-      canvas.style.marginBottom = `${CELL_SIZE * -4}px`;
+      document.body.style.marginBottom = `${CELL_SIZE * -4}px`;
+      /* canvas.style.marginBottom = `${CELL_SIZE * -4}px`; */
 
-      document.querySelector("#wrapper").style.width = `${
-        10 * (CELL_SIZE + 2) + 2
-      }px`;
+      const wrapperEl = document.querySelector("#wrapper");
+
+      wrapperEl.style.width = `${10 * (CELL_SIZE + 2) + 2}px`;
+      wrapperEl.style.height = `${24 * (CELL_SIZE + 2) + 2}px`;
 
       const ctx = canvas.getContext("2d");
 
@@ -103,12 +105,16 @@ import("../pkg/index.js")
         ctx.fillText("by finiam", canvas.width / 2, canvas.height * 0.9);
 
         Object.values(colors).map((color, index) => {
-          // ctx.shadowColor = index !== 0 ? 'red' : "white";
-          // ctx.shadowOffsetX = index !== 0 ? 1 : 1;
-          // ctx.shadowOffsetY = index !== 0 ? 1 : 1;
-          // ctx.shadowColor = 'white';
-          // ctx.shadowBlur = index !== 0 ? 30 : 20;
+          /* ctx.shadowColor = index !== 0 ? "red" : "white";
+          ctx.shadowOffsetX = index !== 0 ? 1 : 1;
+          ctx.shadowOffsetY = index !== 0 ? 1 : 1; */
+          /* ctx.fillStyle = "black"; */
+          /* ctx.fillStyle = "white"; */
+
+          /* ctx.shadowColor = "white";
+          ctx.shadowBlur = index !== 0 ? 20 : 0;*/
           ctx.fillStyle = color;
+
           ctx.fillRect(
             (canvas.width - (CELL_SIZE + 4) * 8) / 2 + (CELL_SIZE + 4) * index,
             canvas.height * 0.7,
@@ -176,11 +182,13 @@ import("../pkg/index.js")
             const idx = col * 24 + row;
 
             ctx.fillStyle = colors[screen[idx]] || "#0000000";
+            /* ctx.fillStyle = screen[idx] !== 0 ? 'white' : "black"; */
+            /* ctx.fillStyle = screen[idx] !== 0 ? "black" : "white"; */
             // ctx.shadowColor = screen[idx] !== 0 ? 'red' : "white";
             // ctx.shadowOffsetX = screen[idx] !== 0 ? 1 : 1;
             // ctx.shadowOffsetY = screen[idx] !== 0 ? 1 : 1;
-            // ctx.shadowColor = 'white';
-            // ctx.shadowBlur = screen[idx] !== 0 ? 30 : 20;
+            /* ctx.shadowColor = "white";
+            ctx.shadowBlur = screen[idx] !== 0 ? 60 : 0; */
             ctx.fillRect(
               col * (CELL_SIZE + 2) + 2,
               row * (CELL_SIZE + 2) + 2,
