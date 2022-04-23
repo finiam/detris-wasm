@@ -31,13 +31,13 @@ import("../pkg/index.js")
 
       const colors = {
         0: "#000000",
-        1: "#780737", // #662211, #332211,
-        2: "#d29708", // #ccaa22, #ddaacc,
-        3: "#125f03", // #557733, #cc4433,
-        4: "#e9e2c7", // #3333dd, #88ddee,
-        5: "#9b6928", // #3333dd, #88ddee,
-        6: "#1c7180", // #7755cc, #dd9977,
-        7: "#569f1b", // #7755cc, #dd9977,
+        1: "#780737",
+        2: "#d29708",
+        3: "#125f03",
+        4: "#e9e2c7",
+        5: "#9b6928",
+        6: "#1c7180",
+        7: "#569f1b",
       };
 
       window.addEventListener("resize", (e) => {
@@ -108,14 +108,6 @@ import("../pkg/index.js")
         ctx.fillText("by finiam", canvas.width / 2, canvas.height * 0.9);
 
         Object.values(colors).map((color, index) => {
-          /* ctx.shadowColor = index !== 0 ? "red" : "white";
-          ctx.shadowOffsetX = index !== 0 ? 1 : 1;
-          ctx.shadowOffsetY = index !== 0 ? 1 : 1; */
-          /* ctx.fillStyle = "black"; */
-          /* ctx.fillStyle = "white"; */
-
-          /* ctx.shadowColor = "white";
-          ctx.shadowBlur = index !== 0 ? 20 : 0;*/
           ctx.fillStyle = color;
 
           ctx.fillRect(
@@ -185,13 +177,6 @@ import("../pkg/index.js")
             const idx = col * 24 + row;
 
             ctx.fillStyle = colors[screen[idx]] || "#0000000";
-            /* ctx.fillStyle = screen[idx] !== 0 ? 'white' : "black"; */
-            /* ctx.fillStyle = screen[idx] !== 0 ? "black" : "white"; */
-            // ctx.shadowColor = screen[idx] !== 0 ? 'red' : "white";
-            // ctx.shadowOffsetX = screen[idx] !== 0 ? 1 : 1;
-            // ctx.shadowOffsetY = screen[idx] !== 0 ? 1 : 1;
-            /* ctx.shadowColor = "white";
-            ctx.shadowBlur = screen[idx] !== 0 ? 60 : 0; */
             ctx.fillRect(
               col * (CELL_SIZE + 2) + 2,
               row * (CELL_SIZE + 2) + 2,
