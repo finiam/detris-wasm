@@ -74,7 +74,7 @@ import("../pkg/index.js")
         ctx.textAlign = "center";
 
         ctx.fillStyle = "#5ff2ef";
-        ctx.font = "40px 'Press Start 2P'";
+        ctx.font = `${canvas.width < 350 ? "30px" : "40px"} 'Press Start 2P'`;
         ctx.fillText(
           "Detris",
           canvas.width / 2,
@@ -83,7 +83,6 @@ import("../pkg/index.js")
         );
 
         ctx.fillStyle = "#ff5050";
-        ctx.font = "40px 'Press Start 2P'";
         ctx.fillText(
           "Detris",
           canvas.width / 2,
@@ -92,13 +91,12 @@ import("../pkg/index.js")
         );
 
         ctx.fillStyle = "#ffffff";
-        ctx.font = "22px 'Press Start 2P'";
+        ctx.font = `${canvas.width < 350 ? "16px" : "22px"} 'Press Start 2P'`;
         ctx.fillText("Hit space", canvas.width / 2, canvas.height * 0.5);
         ctx.fillText("to start", canvas.width / 2, canvas.height * 0.5 + 30);
 
-        ctx.font = "15px 'Press Start 2P'";
+        ctx.font = `${canvas.width < 350 ? "13px" : "15px"} 'Press Start 2P'`;
         ctx.fillText("by finiam", canvas.width / 2, canvas.height * 0.9);
-
 
         Object.values(colors).map((color, index) => {
           // ctx.shadowColor = index !== 0 ? 'red' : "white";
@@ -123,11 +121,10 @@ import("../pkg/index.js")
         ctx.textAlign = "center";
 
         ctx.fillStyle = "#5ff2ef";
-        ctx.font = "40px 'Press Start 2P'";
+        ctx.font = `${canvas.width < 350 ? "30px" : "40px"} 'Press Start 2P'`;
         ctx.fillText("Detris", canvas.width / 2, canvas.height * 0.3);
 
         ctx.fillStyle = "#ff5050";
-        ctx.font = "40px 'Press Start 2P'";
         ctx.fillText("Detris", canvas.width / 2 - 8, canvas.height * 0.3 - 4);
 
         ctx.fillStyle = "#ffffff";
@@ -150,14 +147,6 @@ import("../pkg/index.js")
           canvas.height * 0.5 + 50,
           120,
           120
-        );
-
-        ctx.strokeStyle = "blue";
-        ctx.strokeRect(
-          0,
-          CELL_SIZE * 4,
-          canvas.width,
-          canvas.height - CELL_SIZE * 4
         );
       }
 
