@@ -2,7 +2,7 @@ import("../pkg/index.js").then(wasm =>{
   import ("../pkg/index_bg.wasm").then(w => { 
 
     let game = wasm.Game.new();
-    const CELL_SIZE = 40;
+    let CELL_SIZE = Math.min((window.innerHeight - 100) / 24, (window.innerWidth - 100) / 10);
     const canvas = document.getElementById('tetris-canvas');
     canvas.width = 10 * (CELL_SIZE + 2) + 2;
     canvas.height = 24 * (CELL_SIZE + 2 ) + 2;
@@ -19,6 +19,12 @@ import("../pkg/index.js").then(wasm =>{
       6 : '#1c7180',
       7 : '#569f1b',
     }
+
+    window.addEventListener('resize', (e) => {
+      CELL_SIZE = Math.min((window.innerHeight - 100) / 24, (window.innerWidth - 100) / 10);
+      canvas.width = 10 * (CELL_SIZE + 2) + 2;
+      canvas.height = 24 * (CELL_SIZE + 2 ) + 2;
+    });
 
     document.addEventListener('keypress', (e) => {
       switch (e.code) {
@@ -57,7 +63,7 @@ import("../pkg/index.js").then(wasm =>{
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       for (let col = 0; col < 10; col++) {
-        for (let row = 0; row < 24; row++) {
+        for (let row = 4; row < 24; row++) {
           const idx = col * 24 + row;
 
           ctx.fillStyle = colors[screen[idx]] || '#0000000';
@@ -73,10 +79,12 @@ import("../pkg/index.js").then(wasm =>{
       ctx.stroke();
     }
 
-    const tick_delay = 500;
+    let tick_delay = 500;
     let last_tick = null;
 
     function tick(timestamp) {
+
+      // console.log(tick_delay)
       if (!last_tick) {
         last_tick = timestamp;
       }
@@ -84,7 +92,9 @@ import("../pkg/index.js").then(wasm =>{
       let progress = timestamp - last_tick;
       if (progress > tick_delay) {
         last_tick = timestamp;
+        tick_delay -= 1;
         if (game.tick()) {
+          tick_delay = 500;
           game = wasm.Game.new();
         }
       }
