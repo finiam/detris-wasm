@@ -37,24 +37,24 @@
       }
       .glass {
         position: absolute;
-        width: calc(100% - 32px);
+        width: calc(100% - 4px);
         right: 0;
         left: 0;
         margin: auto;
-        top: 24px;        
         height: 100%;
         background: linear-gradient(
           150deg,
           rgba(255, 255, 255, 0.25),
           rgba(255, 255, 255, 0) 40%
         );
+        border-radius: 10px;
         z-index: 1000;
         pointer-events: none;
       }
       .glass-end {
         transform: rotate(180deg);
         top: 0;
-        bottom: 24px;
+        bottom: 2px;
         opacity: 0.6;
       }
     </style>

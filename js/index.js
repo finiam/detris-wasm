@@ -15,14 +15,17 @@ import("../pkg/index.js")
       canvas.width = 10 * (CELL_SIZE + 2) + 2;
       canvas.height = 24 * (CELL_SIZE + 2) + 2;
       canvas.minWidth = "350px";
-      document.body.style.transform = `translateY(${CELL_SIZE * -4}px)`;
-      document.body.style.marginBottom = `${CELL_SIZE * -4}px`;
-      /* canvas.style.marginBottom = `${CELL_SIZE * -4}px`; */
+      let negativeMargin = CELL_SIZE * -4;
+      document.body.style.transform = `translateY(${negativeMargin}px)`;
+      document.body.style.marginBottom = `${negativeMargin}px`;
 
       const wrapperEl = document.querySelector("#wrapper");
 
       wrapperEl.style.width = `${10 * (CELL_SIZE + 2) + 2}px`;
       wrapperEl.style.height = `${24 * (CELL_SIZE + 2) + 2}px`;
+      wrapperEl.style.marginBottom = `${wrapperEl.style}px`;
+
+      document.querySelector(".glass").style.top = `${negativeMargin * -1 + 2}px`
 
       const ctx = canvas.getContext("2d");
 
