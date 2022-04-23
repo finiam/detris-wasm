@@ -5,6 +5,7 @@ import("../pkg/index.js")
       let status = "begin"; // begin | play | end
       let score = 0;
       let inputs = "";
+      let qrcode = undefined;
 
       let CELL_SIZE = Math.min(
         (window.innerHeight - 100) / 20,
@@ -131,13 +132,15 @@ import("../pkg/index.js")
         ctx.fillStyle = "#ffffff";
         ctx.font = "10px 'Press Start 2P'";
         ctx.fillText(
-          `Moves: ${inputs.slice(0, 6)}...${inputs.slice(-6)}`,
+          `Moves:`,
           canvas.width * 0.2,
           canvas.height * 0.6
         );
 
         ctx.font = "15px 'Press Start 2P'";
         ctx.fillText("by finiam", canvas.width * 0.35, canvas.height * 0.9);
+
+        ctx.drawImage(qrcode, canvas.width * 0.5 - 50, canvas.height * 0.5 + 50);
 
         ctx.strokeStyle = "blue";
         ctx.strokeRect(
@@ -216,6 +219,12 @@ import("../pkg/index.js")
             status = "end";
             score = game.score();
             inputs = game.inputs();
+            svg = game.generate_qrcode();
+
+            blob = new Blob([svg.slice(38)], {type: 'image/svg+xml'});
+
+            qrcode = new Image();
+            qrcode.src = URL.createObjectURL(blob)
 
             game.tick_delay = 500;
             game = wasm.Game.new();

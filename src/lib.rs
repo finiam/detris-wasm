@@ -1,6 +1,7 @@
 mod utils;
 use js_sys::Math;
 
+use qrcode_generator::QrCodeEcc;
 use utils::set_panic_hook;
 use wasm_bindgen::prelude::*;
 
@@ -298,7 +299,7 @@ impl Game {
             grid: [[0; 10]; 24],
             block: Block::random(),
             tick_delay: 500,
-            inputs: "".to_string(),
+            inputs: "Move order: ".to_string(),
             score: 0,
         }
     }
@@ -369,5 +370,15 @@ impl Game {
         }
 
         game_finished(&self.grid)
+    }
+
+    pub fn generate_qrcode(&mut self) -> String {
+        return qrcode_generator::to_svg_to_string_from_str(
+            self.inputs.clone(),
+            QrCodeEcc::Low,
+            96,
+            Some("QR Code"),
+        )
+        .unwrap();
     }
 }
