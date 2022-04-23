@@ -24,6 +24,7 @@ pub struct Game {
     screen: [u8; 10 * 24],
     grid: Grid,
     block: Block,
+    tick_delay: u64,
 }
 
 #[wasm_bindgen]
@@ -271,12 +272,14 @@ fn game_finished(grid: &Grid) -> bool {
     false
 }
 
-fn clear_full_lines(grid: &mut Grid) -> u32 {
+fn clear_full_lines(grid: &mut Grid, tick_delay: &mut u64) -> u32 {
     let mut score = 0;
 
     for y in 0..24 {
         if !grid[y].iter().any(|cell| *cell == 0u8) {
             score += 1;
+            *tick_delay -= 50;
+
             for y2 in (1..=y).rev() {
                 for x in 0..10 {
                     grid[y2][x] = grid[y2 - 1][x];
@@ -296,7 +299,12 @@ impl Game {
             screen: [0; 240],
             grid: [[0; 10]; 24],
             block: Block::random(),
+            tick_delay: 500,
         }
+    }
+
+    pub fn tick_delay(&self) -> u64 {
+        self.tick_delay
     }
 
     pub fn draw(&mut self) -> *const u8 {
@@ -342,7 +350,7 @@ impl Game {
 
     pub fn tick(&mut self) -> bool {
         if !step_down(&mut self.grid, &mut self.block) {
-            clear_full_lines(&mut self.grid);
+            clear_full_lines(&mut self.grid, &mut self.tick_delay);
 
             self.block = Block::random();
         }
