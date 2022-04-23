@@ -15,7 +15,9 @@ import("../pkg/index.js")
       canvas.width = 10 * (CELL_SIZE + 2) + 2;
       canvas.height = 24 * (CELL_SIZE + 2) + 2;
       canvas.minWidth = "350px";
-      canvas.style.marginTop = `${CELL_SIZE * -4}px`;
+      document.body.style.transform = `translateY(${CELL_SIZE * -4}px)`;
+      canvas.style.marginBottom = `${CELL_SIZE * -4}px`;
+
 
       const ctx = canvas.getContext("2d");
 
