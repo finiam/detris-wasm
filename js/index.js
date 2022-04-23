@@ -18,7 +18,6 @@ import("../pkg/index.js")
       document.body.style.transform = `translateY(${CELL_SIZE * -4}px)`;
       canvas.style.marginBottom = `${CELL_SIZE * -4}px`;
 
-
       const ctx = canvas.getContext("2d");
 
       const colors = {
@@ -72,29 +71,34 @@ import("../pkg/index.js")
       function startScreen() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        ctx.textAlign = "center";
+
         ctx.fillStyle = "#5ff2ef";
         ctx.font = "40px 'Press Start 2P'";
-        ctx.fillText("Detris", canvas.width * 0.2, canvas.height * 0.3);
+        ctx.fillText(
+          "Detris",
+          canvas.width / 2,
+          canvas.height * 0.3,
+          canvas.width
+        );
 
         ctx.fillStyle = "#ff5050";
         ctx.font = "40px 'Press Start 2P'";
-        ctx.fillText("Detris", canvas.width * 0.2 - 8, canvas.height * 0.3 - 4);
+        ctx.fillText(
+          "Detris",
+          canvas.width / 2,
+          canvas.height * 0.3 - 4,
+          canvas.width
+        );
 
         ctx.fillStyle = "#ffffff";
         ctx.font = "22px 'Press Start 2P'";
-        ctx.fillText("Hit space", canvas.width * 0.25, canvas.height * 0.5);
-        ctx.fillText("to start", canvas.width * 0.27, canvas.height * 0.5 + 30);
+        ctx.fillText("Hit space", canvas.width / 2, canvas.height * 0.5);
+        ctx.fillText("to start", canvas.width / 2, canvas.height * 0.5 + 30);
 
         ctx.font = "15px 'Press Start 2P'";
-        ctx.fillText("by finiam", canvas.width * 0.35, canvas.height * 0.9);
+        ctx.fillText("by finiam", canvas.width / 2, canvas.height * 0.9);
 
-        ctx.strokeStyle = "blue";
-        ctx.strokeRect(
-          0,
-          CELL_SIZE * 4,
-          canvas.width,
-          canvas.height - CELL_SIZE * 4
-        );
 
         Object.values(colors).map((color, index) => {
           // ctx.shadowColor = index !== 0 ? 'red' : "white";
@@ -104,7 +108,7 @@ import("../pkg/index.js")
           // ctx.shadowBlur = index !== 0 ? 30 : 20;
           ctx.fillStyle = color;
           ctx.fillRect(
-            25 + (CELL_SIZE + 4) * index,
+            (canvas.width - (CELL_SIZE + 4) * 8) / 2 + (CELL_SIZE + 4) * index,
             canvas.height * 0.7,
             CELL_SIZE,
             CELL_SIZE
@@ -116,19 +120,21 @@ import("../pkg/index.js")
       function endScreen() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        ctx.textAlign = "center";
+
         ctx.fillStyle = "#5ff2ef";
         ctx.font = "40px 'Press Start 2P'";
-        ctx.fillText("Detris", canvas.width * 0.2, canvas.height * 0.3);
+        ctx.fillText("Detris", canvas.width / 2, canvas.height * 0.3);
 
         ctx.fillStyle = "#ff5050";
         ctx.font = "40px 'Press Start 2P'";
-        ctx.fillText("Detris", canvas.width * 0.2 - 8, canvas.height * 0.3 - 4);
+        ctx.fillText("Detris", canvas.width / 2 - 8, canvas.height * 0.3 - 4);
 
         ctx.fillStyle = "#ffffff";
         ctx.font = "22px 'Press Start 2P'";
         ctx.fillText(
           `Score:${score}`,
-          canvas.width * 0.25,
+          canvas.width / 2,
           canvas.height * 0.5
         );
 
@@ -136,11 +142,11 @@ import("../pkg/index.js")
         ctx.font = "10px 'Press Start 2P'";
 
         ctx.font = "15px 'Press Start 2P'";
-        ctx.fillText("by finiam", canvas.width * 0.35, canvas.height * 0.9);
+        ctx.fillText("by finiam", canvas.width / 2, canvas.height * 0.9);
 
         ctx.drawImage(
           qrcode,
-          canvas.width * 0.5 - 50,
+          (canvas.width - 120) / 2,
           canvas.height * 0.5 + 50,
           120,
           120
@@ -153,21 +159,6 @@ import("../pkg/index.js")
           canvas.width,
           canvas.height - CELL_SIZE * 4
         );
-
-        Object.values(colors).map((color, index) => {
-          // ctx.shadowColor = index !== 0 ? 'red' : "white";
-          // ctx.shadowOffsetX = index !== 0 ? 1 : 1;
-          // ctx.shadowOffsetY = index !== 0 ? 1 : 1;
-          // ctx.shadowColor = 'white';
-          // ctx.shadowBlur = index !== 0 ? 30 : 20;
-          ctx.fillStyle = color;
-          ctx.fillRect(
-            25 + (CELL_SIZE + 4) * index,
-            canvas.height * 0.7,
-            CELL_SIZE,
-            CELL_SIZE
-          );
-        });
       }
 
       function draw() {
