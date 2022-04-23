@@ -3,6 +3,9 @@ import("../pkg/index.js")
     import("../pkg/index_bg.wasm").then((w) => {
       let game = wasm.Game.new();
       let status = "begin"; // begin | play | end
+      let score = 0;
+      let inputs = "";
+
       let CELL_SIZE = Math.min(
         (window.innerHeight - 100) / 20,
         (window.innerWidth - 100) / 10
@@ -63,6 +66,8 @@ import("../pkg/index.js")
       });
 
       function startScreen() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
         ctx.fillStyle = "#5ff2ef";
         ctx.font = "40px 'Press Start 2P'";
         ctx.fillText("Detris", canvas.width * 0.2, canvas.height * 0.3);
@@ -71,17 +76,21 @@ import("../pkg/index.js")
         ctx.font = "40px 'Press Start 2P'";
         ctx.fillText("Detris", canvas.width * 0.2 - 8, canvas.height * 0.3 - 4);
 
-        ctx.fillStyle = "#ffffff"
+        ctx.fillStyle = "#ffffff";
         ctx.font = "22px 'Press Start 2P'";
         ctx.fillText("Hit space", canvas.width * 0.25, canvas.height * 0.5);
         ctx.fillText("to start", canvas.width * 0.27, canvas.height * 0.5 + 30);
 
-
         ctx.font = "15px 'Press Start 2P'";
         ctx.fillText("by finiam", canvas.width * 0.35, canvas.height * 0.9);
 
-        ctx.strokeStyle = 'blue'
-        ctx.strokeRect(0, CELL_SIZE * 4, canvas.width, canvas.height - CELL_SIZE * 4)
+        ctx.strokeStyle = "blue";
+        ctx.strokeRect(
+          0,
+          CELL_SIZE * 4,
+          canvas.width,
+          canvas.height - CELL_SIZE * 4
+        );
 
         Object.values(colors).map((color, index) => {
           ctx.fillStyle = color;
@@ -89,33 +98,57 @@ import("../pkg/index.js")
             25 + (CELL_SIZE + 4) * index,
             canvas.height * 0.7,
             CELL_SIZE,
-            CELL_SIZE,
+            CELL_SIZE
           );
-        })
+        });
       }
 
       function endScreen() {
-        for (let i = 0; i < 6; i++) {
-          for (let j = 0; j < 6; j++) {
-            ctx.fillStyle = `rgb(
-              ${Math.floor(255 - 42.5 * i)},
-              ${Math.floor(255 - 42.5 * j)},
-              0)`;
-            ctx.fillRect(
-              j * 25 + CELL_SIZE * 4,
-              i * 25 + CELL_SIZE * 4,
-              25,
-              25
-            );
-          }
-        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#5ff2ef";
+        ctx.font = "40px 'Press Start 2P'";
+        ctx.fillText("Detris", canvas.width * 0.2, canvas.height * 0.3);
 
-        ctx.fillStyle = "#ff0000";
-        ctx.font = "50px serif";
-        ctx.fillText("Hello", 100, 200);
+        ctx.fillStyle = "#ff5050";
+        ctx.font = "40px 'Press Start 2P'";
+        ctx.fillText("Detris", canvas.width * 0.2 - 8, canvas.height * 0.3 - 4);
 
-        ctx.font = "20px serif";
-        ctx.fillText("Hit space to start", 100, 400);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "22px 'Press Start 2P'";
+        ctx.fillText(
+          `Score: ${score}`,
+          canvas.width * 0.25,
+          canvas.height * 0.5
+        );
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "10px 'Press Start 2P'";
+        ctx.fillText(
+          `Moves: ${inputs.slice(0, 6)}...${inputs.slice(-6)}`,
+          canvas.width * 0.2,
+          canvas.height * 0.6
+        );
+
+        ctx.font = "15px 'Press Start 2P'";
+        ctx.fillText("by finiam", canvas.width * 0.35, canvas.height * 0.9);
+
+        ctx.strokeStyle = "blue";
+        ctx.strokeRect(
+          0,
+          CELL_SIZE * 4,
+          canvas.width,
+          canvas.height - CELL_SIZE * 4
+        );
+
+        Object.values(colors).map((color, index) => {
+          ctx.fillStyle = color;
+          ctx.fillRect(
+            25 + (CELL_SIZE + 4) * index,
+            canvas.height * 0.7,
+            CELL_SIZE,
+            CELL_SIZE
+          );
+        });
       }
 
       function draw() {
@@ -160,7 +193,6 @@ import("../pkg/index.js")
       let last_tick = null;
 
       function tick(timestamp) {
-        // console.log(tick_delay)
         if (!last_tick) {
           last_tick = timestamp;
         }
@@ -169,6 +201,10 @@ import("../pkg/index.js")
         if (progress > game.tick_delay()) {
           last_tick = timestamp;
           if (status === "play" && game.tick()) {
+            status = "end";
+            score = game.score();
+            inputs = game.inputs();
+
             game.tick_delay = 500;
             game = wasm.Game.new();
           }

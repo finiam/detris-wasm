@@ -25,6 +25,8 @@ pub struct Game {
     grid: Grid,
     block: Block,
     tick_delay: u64,
+    inputs: String,
+    score: u8,
 }
 
 #[wasm_bindgen]
@@ -272,12 +274,10 @@ fn game_finished(grid: &Grid) -> bool {
     false
 }
 
-fn clear_full_lines(grid: &mut Grid, tick_delay: &mut u64) -> u32 {
-    let mut score = 0;
-
+fn clear_full_lines(score: &mut u8, grid: &mut Grid, tick_delay: &mut u64) {
     for y in 0..24 {
         if !grid[y].iter().any(|cell| *cell == 0u8) {
-            score += 1;
+            *score += 1;
             *tick_delay -= 50;
 
             for y2 in (1..=y).rev() {
@@ -287,8 +287,6 @@ fn clear_full_lines(grid: &mut Grid, tick_delay: &mut u64) -> u32 {
             }
         }
     }
-
-    score
 }
 
 #[wasm_bindgen]
@@ -300,11 +298,21 @@ impl Game {
             grid: [[0; 10]; 24],
             block: Block::random(),
             tick_delay: 500,
+            inputs: "".to_string(),
+            score: 0,
         }
     }
 
     pub fn tick_delay(&self) -> u64 {
         self.tick_delay
+    }
+
+    pub fn inputs(&self) -> String {
+        self.inputs.to_string()
+    }
+
+    pub fn score(&self) -> u8 {
+        self.score
     }
 
     pub fn draw(&mut self) -> *const u8 {
@@ -333,24 +341,29 @@ impl Game {
         // bit 4 - right-key pressed
 
         if (input_code & 2) != 0 {
+            self.inputs.push_str("W");
+
             if let Some(new_block) = rotate_left(&self.grid, &self.block) {
                 self.block = new_block;
             }
         }
         if (input_code & 4) != 0 {
+            self.inputs.push_str("S");
             drop_down(&mut self.grid, &mut self.block);
         }
         if (input_code & 8) != 0 {
+            self.inputs.push_str("A");
             step_left(&self.grid, &mut self.block);
         }
         if (input_code & 16) != 0 {
+            self.inputs.push_str("D");
             step_right(&self.grid, &mut self.block);
         }
     }
 
     pub fn tick(&mut self) -> bool {
         if !step_down(&mut self.grid, &mut self.block) {
-            clear_full_lines(&mut self.grid, &mut self.tick_delay);
+            clear_full_lines(&mut self.score, &mut self.grid, &mut self.tick_delay);
 
             self.block = Block::random();
         }
