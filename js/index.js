@@ -18,6 +18,10 @@ import("../pkg/index.js")
       document.body.style.transform = `translateY(${CELL_SIZE * -4}px)`;
       canvas.style.marginBottom = `${CELL_SIZE * -4}px`;
 
+      document.querySelector("#wrapper").style.width = `${
+        10 * (CELL_SIZE + 2) + 2
+      }px`;
+
       const ctx = canvas.getContext("2d");
 
       const colors = {
@@ -129,11 +133,7 @@ import("../pkg/index.js")
 
         ctx.fillStyle = "#ffffff";
         ctx.font = "22px 'Press Start 2P'";
-        ctx.fillText(
-          `Score:${score}`,
-          canvas.width / 2,
-          canvas.height * 0.5
-        );
+        ctx.fillText(`Score:${score}`, canvas.width / 2, canvas.height * 0.5);
 
         ctx.fillStyle = "#ffffff";
         ctx.font = "10px 'Press Start 2P'";
