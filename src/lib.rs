@@ -316,6 +316,10 @@ impl Game {
         self.score
     }
 
+    pub fn grid(&self) -> Vec<u8> {
+        self.grid.to_vec().into_iter().flatten().collect()
+    }
+
     pub fn draw(&mut self) -> *const u8 {
         for x in 0..10 {
             for y in 0..24 {

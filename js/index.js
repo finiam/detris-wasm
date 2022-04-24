@@ -6,6 +6,7 @@ import("../pkg/index.js")
       let score = 0;
       let inputs = "";
       let qrcode = undefined;
+      let last_game_state;
 
       let CELL_SIZE = Math.min(
         (window.innerHeight - 75) / 20,
@@ -25,7 +26,9 @@ import("../pkg/index.js")
       wrapperEl.style.height = `${24 * (CELL_SIZE + 2) + 2}px`;
       wrapperEl.style.marginBottom = `${wrapperEl.style}px`;
 
-      document.querySelector(".glass").style.top = `${negativeMargin * -1 + 2}px`
+      document.querySelector(".glass").style.top = `${
+        negativeMargin * -1 + 2
+      }px`;
 
       const ctx = canvas.getContext("2d");
 
@@ -205,13 +208,31 @@ import("../pkg/index.js")
             inputs = game.inputs();
             svg = game.generate_qrcode();
 
+            last_game_state = {
+              colors: colors,
+              last_position: Array.from(game.grid()),
+            };
+
             const moves = document.createElement("textarea");
+            moves.className = "moves-textarea";
             moves.setAttribute("spellcheck", "false");
             moves.addEventListener("click", (e) => {
               e.target.select();
             });
             moves.value = inputs.slice(12);
             document.body.append(moves);
+
+            const nft = document.createElement("textarea");
+            nft.className = "nft-textarea";
+            nft.setAttribute("spellcheck", "false");
+            nft.addEventListener("click", (e) => {
+              e.target.select();
+            });
+            nft.value = (
+              Object.values(last_game_state.colors).join('') +
+              last_game_state.last_position.join('')
+            );
+            document.body.append(nft);
 
             blob = new Blob([svg.slice(38)], { type: "image/svg+xml" });
 
