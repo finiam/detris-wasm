@@ -1,9 +1,9 @@
 mod utils;
-use js_sys::Math;
 
 use qrcode_generator::QrCodeEcc;
 use utils::set_panic_hook;
 use wasm_bindgen::prelude::*;
+use rand::distributions::{Distribution, Uniform};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -187,7 +187,10 @@ impl Block {
 }
 
 fn rand_int(max: usize) -> usize {
-    (Math::random() * (max as f64)) as usize
+    let mut rng = rand::thread_rng();
+    let distribution = Uniform::from(0..max);
+
+    return distribution.sample(&mut rng);
 }
 
 fn step_down(grid: &mut Grid, block: &mut Block) -> bool {
@@ -279,7 +282,10 @@ fn clear_full_lines(score: &mut u64, grid: &mut Grid, tick_delay: &mut u64) {
     for y in 0..24 {
         if !grid[y].iter().any(|cell| *cell == 0u8) {
             *score += 1;
-            *tick_delay -= 10;
+
+            // delay function => f(x) = (time_limit * x) / (difficulty_rate + x)
+            let score_delay_rate = (400 * (*score)) / (75 + (*score));
+            *tick_delay = 400 - score_delay_rate;
 
             for y2 in (1..=y).rev() {
                 for x in 0..10 {
