@@ -26,21 +26,17 @@ import("../pkg/index.js")
       wrapperEl.style.height = `${24 * (CELL_SIZE + 2) + 2}px`;
       wrapperEl.style.marginBottom = `${wrapperEl.style}px`;
 
-      document.querySelector(".glass").style.top = `${
-        negativeMargin * -1 + 2
-      }px`;
-
       const ctx = canvas.getContext("2d");
 
       const colors = {
-        0: "#000000",
-        1: "#780737",
-        2: "#d29708",
-        3: "#125f03",
-        4: "#e9e2c7",
-        5: "#9b6928",
-        6: "#1c7180",
-        7: "#569f1b",
+        0: "#000000", //  FINIAM    //  RESENDE
+        1: "#ff5050", // "#00524e", // "#780737",
+        2: "#158CFA", // "#dedb7b", // "#d29708",
+        3: "#F9F25D", // "#c4b2f6", // "#125f03",
+        4: "#D05DF9", // "#4D00E5", // "#e9e2c7",
+        5: "#5DF9DD", // "#f8f1ec", // "#9b6928",
+        6: "#ffffff", // "#fcd5db", // "#1c7180",
+        7: "#64CA81", // "#ed7a5f", // "#569f1b",
       };
 
       window.addEventListener("resize", (e) => {
@@ -88,7 +84,7 @@ import("../pkg/index.js")
         ctx.fillStyle = "#5ff2ef";
         ctx.font = `${canvas.width < 350 ? "30px" : "40px"} 'Press Start 2P'`;
         ctx.fillText(
-          "Detris",
+          "DETRIS",
           canvas.width / 2,
           canvas.height * 0.3,
           canvas.width
@@ -96,8 +92,8 @@ import("../pkg/index.js")
 
         ctx.fillStyle = "#ff5050";
         ctx.fillText(
-          "Detris",
-          canvas.width / 2,
+          "DETRIS",
+          canvas.width / 2 - 4,
           canvas.height * 0.3 - 4,
           canvas.width
         );
@@ -106,9 +102,6 @@ import("../pkg/index.js")
         ctx.font = `${canvas.width < 350 ? "16px" : "22px"} 'Press Start 2P'`;
         ctx.fillText("Hit space", canvas.width / 2, canvas.height * 0.5);
         ctx.fillText("to start", canvas.width / 2, canvas.height * 0.5 + 30);
-
-        ctx.font = `${canvas.width < 350 ? "13px" : "15px"} 'Press Start 2P'`;
-        ctx.fillText("by finiam", canvas.width / 2, canvas.height * 0.9);
 
         Object.values(colors).map((color, index) => {
           ctx.fillStyle = color;
@@ -121,6 +114,11 @@ import("../pkg/index.js")
           );
         });
         ctx.shadowBlur = 0;
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = `${canvas.width < 350 ? "13px" : "15px"} 'Press Start 2P'`;
+        ctx.fillText("by finiam", canvas.width / 2, canvas.height * 0.66);
+
       }
 
       function endScreen() {
