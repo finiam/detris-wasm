@@ -10,21 +10,21 @@ import("../pkg/index.js")
 
       let CELL_SIZE = Math.min(
         (window.innerHeight - 75) / 20,
-        (window.innerWidth - 20) / 10
+        (window.innerWidth - 30) / 10
       );
       const canvas = document.getElementById("tetris-canvas");
-      canvas.width = 10 * (CELL_SIZE + 2) + 2;
+      canvas.width = 10 * (CELL_SIZE + 2) + 12;
       canvas.height = 24 * (CELL_SIZE + 2) + 2;
-      canvas.minWidth = "350px";
+      canvas.style.marginTop = `${-4 * (CELL_SIZE + 2)}px`;
       let negativeMargin = CELL_SIZE * -4;
       document.body.style.transform = `translateY(${negativeMargin}px)`;
       document.body.style.marginBottom = `${negativeMargin}px`;
 
       const wrapperEl = document.querySelector("#wrapper");
 
-      wrapperEl.style.width = `${10 * (CELL_SIZE + 2) + 2}px`;
-      wrapperEl.style.height = `${24 * (CELL_SIZE + 2) + 2}px`;
-      wrapperEl.style.marginBottom = `${wrapperEl.style}px`;
+      wrapperEl.style.width = `${10 * (CELL_SIZE + 2) + 8}px`;
+      wrapperEl.style.height = `${20 * (CELL_SIZE + 2) + 6}px`;
+      wrapperEl.style.top = `${4 * (CELL_SIZE + 2) + 2}px`;
 
       const ctx = canvas.getContext("2d");
 
@@ -39,7 +39,7 @@ import("../pkg/index.js")
         7: "#64CA81", // "#ed7a5f", // "#569f1b",
       };
 
-      window.addEventListener("resize", (e) => {
+      window.addEventListener("resize", (_e) => {
         CELL_SIZE = Math.min(
           (window.innerHeight - 75) / 20,
           (window.innerWidth - 20) / 10
@@ -76,13 +76,65 @@ import("../pkg/index.js")
         }
       });
 
+      function paintPieces(color, xx, yy) {
+        if (color && color !== "#000000") {
+        //   // No Borders
+          ctx.fillStyle = color;
+          ctx.fillRect(
+            xx,
+            yy,
+            CELL_SIZE,
+            CELL_SIZE
+          );
+
+          // Only Borders
+          // ctx.strokeStyle = color;
+          // ctx.lineWidth = 4;
+          // ctx.lineJoin = 'round';
+          // ctx.fillStyle = "#000000";
+          // ctx.fillRect(
+          //   xx,
+          //   yy,
+          //   CELL_SIZE,
+          //   CELL_SIZE
+          // );
+          // ctx.strokeRect(
+          //   xx,
+          //   yy,
+          //   CELL_SIZE,
+          //   CELL_SIZE
+          // );
+
+          // Neon
+          // ctx.shadowColor = 'white';
+          // ctx.shadowBlur = 10;
+          // ctx.fillStyle = color;
+          // ctx.fillRect(
+          //   xx,
+          //   yy,
+          //   CELL_SIZE,
+          //   CELL_SIZE
+          // );
+        }
+
+        // With borders / White / Inverted
+        // ctx.fillStyle = color !== "#000000" ? "white" : "#000000";
+        // ctx.fillStyle = color;
+        // ctx.fillRect(
+        //   xx,
+        //   yy,
+        //   CELL_SIZE,
+        //   CELL_SIZE
+        // );
+      }
+
       function startScreen() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         ctx.textAlign = "center";
 
         ctx.fillStyle = "#5ff2ef";
-        ctx.font = `${canvas.width < 350 ? "30px" : "40px"} 'Press Start 2P'`;
+        ctx.font = `${canvas.width < 350 ? "30px" : "50px"} 'Press Start 2P'`;
         ctx.fillText(
           "DETRIS",
           canvas.width / 2,
@@ -98,27 +150,43 @@ import("../pkg/index.js")
           canvas.width
         );
 
+        ctx.shadowColor = 'black';
+        ctx.shadowOffsetX = 4;
+        ctx.shadowOffsetY = 4;
+
         ctx.fillStyle = "#ffffff";
         ctx.font = `${canvas.width < 350 ? "16px" : "22px"} 'Press Start 2P'`;
-        ctx.fillText("Hit space", canvas.width / 2, canvas.height * 0.5);
-        ctx.fillText("to start", canvas.width / 2, canvas.height * 0.5 + 30);
+        ctx.fillText("Hit space", canvas.width / 2, canvas.height * 0.45);
+        ctx.fillText("to start", canvas.width / 2, canvas.height * 0.45 + 30);
 
-        Object.values(colors).map((color, index) => {
-          ctx.fillStyle = color;
-
-          ctx.fillRect(
-            (canvas.width - (CELL_SIZE + 4) * 8) / 2 + (CELL_SIZE + 4) * index,
-            canvas.height * 0.7,
-            CELL_SIZE,
-            CELL_SIZE
-          );
-        });
         ctx.shadowBlur = 0;
-
         ctx.fillStyle = "#ffffff";
         ctx.font = `${canvas.width < 350 ? "13px" : "15px"} 'Press Start 2P'`;
         ctx.fillText("by finiam", canvas.width / 2, canvas.height * 0.66);
 
+        ctx.shadowOffsetY = 0;
+        ctx.shadowOffsetX = 0;
+
+        const initialMap = [
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+          [0, 0, 0, 0, 0, 0, 0, 0, 5, 1],
+          [7, 7, 0, 0, 0, 0, 1, 5, 5, 1],
+          [0, 7, 0, 0, 7, 0, 1, 5, 0, 1],
+          [0, 7, 4, 0, 7, 0, 1, 6, 6, 6],
+          [5, 5, 4, 4, 7, 7, 1, 5, 5, 6],
+          [3, 5, 5, 4, 0, 6, 6, 0, 5, 5],
+          [3, 3, 2, 2, 0, 6, 6, 6, 6, 0],
+          [3, 0, 2, 2, 6, 6, 3, 3, 3, 0],
+        ]
+
+        for(let i = 0; i < initialMap.length; i++ ) {
+          for(let j = 0; j < initialMap[0].length; j++) {
+            const color = colors[initialMap[i][j]];
+            const xx = (CELL_SIZE + 2) * j + 5;
+            const yy = ((CELL_SIZE + 2) * 15) + (CELL_SIZE + 2) * i + 3;
+            paintPieces(color, xx, yy);
+          }
+        }
       }
 
       function endScreen() {
@@ -127,15 +195,15 @@ import("../pkg/index.js")
         ctx.textAlign = "center";
 
         ctx.fillStyle = "#5ff2ef";
-        ctx.font = `${canvas.width < 350 ? "30px" : "40px"} 'Press Start 2P'`;
-        ctx.fillText("Detris", canvas.width / 2, canvas.height * 0.3);
+        ctx.font = `${canvas.width < 350 ? "30px" : "50px"} 'Press Start 2P'`;
+        ctx.fillText("DETRIS", canvas.width / 2, canvas.height * 0.3);
 
         ctx.fillStyle = "#ff5050";
-        ctx.fillText("Detris", canvas.width / 2 - 8, canvas.height * 0.3 - 4);
+        ctx.fillText("DETRIS", canvas.width / 2 - 8, canvas.height * 0.3 - 4);
 
         ctx.fillStyle = "#ffffff";
         ctx.font = "22px 'Press Start 2P'";
-        ctx.fillText(`Score:${score}`, canvas.width / 2, canvas.height * 0.5);
+        ctx.fillText(`Score:${score}`, canvas.width / 2, canvas.height * 0.45);
 
         ctx.fillStyle = "#ffffff";
         ctx.font = "10px 'Press Start 2P'";
@@ -176,14 +244,10 @@ import("../pkg/index.js")
         for (let col = 0; col < 10; col++) {
           for (let row = 4; row < 24; row++) {
             const idx = col * 24 + row;
-
-            ctx.fillStyle = colors[screen[idx]] || "#0000000";
-            ctx.fillRect(
-              col * (CELL_SIZE + 2) + 2,
-              row * (CELL_SIZE + 2) + 2,
-              CELL_SIZE,
-              CELL_SIZE
-            );
+            const color = colors[screen[idx]];
+            const xx = col * (CELL_SIZE + 2) + 5;
+            const yy = row * (CELL_SIZE + 2) + 5;
+            paintPieces(color, xx, yy);
           }
         }
 
