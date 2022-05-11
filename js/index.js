@@ -12,6 +12,12 @@ import("../pkg/index.js")
         (window.innerHeight - 75) / 20,
         (window.innerWidth - 30) / 10
       );
+      const wrapperEl = document.querySelector("#wrapper");
+
+      wrapperEl.style.width = `${10 * (CELL_SIZE + 2) + 8}px`;
+      wrapperEl.style.height = `${20 * (CELL_SIZE + 2) + 6}px`;
+      wrapperEl.style.top = `${4 * (CELL_SIZE + 2) + 2}px`;
+
       const canvas = document.getElementById("tetris-canvas");
       canvas.width = 10 * (CELL_SIZE + 2) + 12;
       canvas.height = 24 * (CELL_SIZE + 2) + 2;
@@ -19,12 +25,9 @@ import("../pkg/index.js")
       let negativeMargin = CELL_SIZE * -4;
       document.body.style.transform = `translateY(${negativeMargin}px)`;
       document.body.style.marginBottom = `${negativeMargin}px`;
+      document.body.style.setProperty("--top", `${4 * (CELL_SIZE + 2) - 4}px`);
 
-      const wrapperEl = document.querySelector("#wrapper");
-
-      wrapperEl.style.width = `${10 * (CELL_SIZE + 2) + 8}px`;
-      wrapperEl.style.height = `${20 * (CELL_SIZE + 2) + 6}px`;
-      wrapperEl.style.top = `${4 * (CELL_SIZE + 2) + 2}px`;
+      wrapperEl.style.display = "block";
 
       const ctx = canvas.getContext("2d");
 
@@ -44,9 +47,20 @@ import("../pkg/index.js")
           (window.innerHeight - 75) / 20,
           (window.innerWidth - 20) / 10
         );
-        canvas.width = 10 * (CELL_SIZE + 2) + 2;
+        canvas.width = 10 * (CELL_SIZE + 2) + 12;
         canvas.height = 24 * (CELL_SIZE + 2) + 2;
-        canvas.marginTop = `${CELL_SIZE * -4}px`;
+        canvas.style.marginTop = `${-4 * (CELL_SIZE + 2)}px`;
+
+        let negativeMargin = CELL_SIZE * -4;
+        document.body.style.transform = `translateY(${negativeMargin}px)`;
+        document.body.style.marginBottom = `${negativeMargin}px`;
+        document.body.style.setProperty("--top", `${4 * (CELL_SIZE + 2) - 4}px`);
+
+        const wrapperEl = document.querySelector("#wrapper");
+
+        wrapperEl.style.width = `${10 * (CELL_SIZE + 2) + 8}px`;
+        wrapperEl.style.height = `${20 * (CELL_SIZE + 2) + 6}px`;
+        wrapperEl.style.top = `${4 * (CELL_SIZE + 2) + 2}px`;
       });
 
       document.addEventListener("keypress", (e) => {
@@ -199,7 +213,7 @@ import("../pkg/index.js")
         ctx.fillText("DETRIS", canvas.width / 2, canvas.height * 0.3);
 
         ctx.fillStyle = "#ff5050";
-        ctx.fillText("DETRIS", canvas.width / 2 - 8, canvas.height * 0.3 - 4);
+        ctx.fillText("DETRIS", canvas.width / 2 - 4, canvas.height * 0.3 - 4);
 
         ctx.shadowColor = 'black';
         ctx.shadowOffsetX = 4;
