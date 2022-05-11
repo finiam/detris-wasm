@@ -201,6 +201,9 @@ import("../pkg/index.js")
         ctx.fillStyle = "#ff5050";
         ctx.fillText("DETRIS", canvas.width / 2 - 8, canvas.height * 0.3 - 4);
 
+        ctx.shadowColor = 'black';
+        ctx.shadowOffsetX = 4;
+        ctx.shadowOffsetY = 4;
         ctx.fillStyle = "#ffffff";
         ctx.font = "22px 'Press Start 2P'";
         ctx.fillText(`Score:${score}`, canvas.width / 2, canvas.height * 0.45);
@@ -210,6 +213,8 @@ import("../pkg/index.js")
 
         ctx.font = "15px 'Press Start 2P'";
         ctx.fillText("by finiam", canvas.width / 2, canvas.height * 0.9);
+        ctx.shadowOffsetY = 0;
+        ctx.shadowOffsetX = 0;
 
         ctx.drawImage(
           qrcode,
