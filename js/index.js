@@ -5,7 +5,6 @@ import("../pkg/index.js")
       let status = "begin"; // begin | play | end
       let score = 0;
       let inputs = "";
-      let qrcode = undefined;
       let last_game_state;
       let CELL_SIZE;
       let canvas;
@@ -216,14 +215,6 @@ import("../pkg/index.js")
         ctx.fillText("by finiam", canvas.width / 2, canvas.height * 0.9);
         ctx.shadowOffsetY = 0;
         ctx.shadowOffsetX = 0;
-
-        ctx.drawImage(
-          qrcode,
-          (canvas.width - 120) / 2,
-          canvas.height * 0.5 + 50,
-          120,
-          120
-        );
       }
 
       function draw() {
@@ -274,7 +265,6 @@ import("../pkg/index.js")
             status = "end";
             score = game.score();
             inputs = game.inputs();
-            svg = game.generate_qrcode();
 
             last_game_state = {
               colors: colors,
@@ -301,11 +291,6 @@ import("../pkg/index.js")
               last_game_state.last_position.join('')
             );
             document.body.append(nft);
-
-            blob = new Blob([svg.slice(38)], { type: "image/svg+xml" });
-
-            qrcode = new Image();
-            qrcode.src = URL.createObjectURL(blob);
 
             game.tick_delay = 400;
             game = wasm.Game.new();
