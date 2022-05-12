@@ -1,6 +1,5 @@
 mod utils;
 
-use qrcode_generator::QrCodeEcc;
 use utils::set_panic_hook;
 use wasm_bindgen::prelude::*;
 use rand::distributions::{Distribution, Uniform};
@@ -66,24 +65,6 @@ impl Block {
             let x = p.x as f32 - cx + 0.5;
             p.x = (-y + cx - 0.5).round() as i32;
             p.y = (x + cy - 0.5).round() as i32;
-        }
-
-        rv
-    }
-
-    fn rotate_right(&self) -> Block {
-        let cx: f32 =
-            ((self.cells[0].x + self.cells[1].x + self.cells[2].x + self.cells[3].x) as f32) / 4.0;
-        let cy: f32 =
-            ((self.cells[0].y + self.cells[1].y + self.cells[2].y + self.cells[3].y) as f32) / 4.0;
-
-        let mut rv = self.clone();
-
-        for p in rv.cells.iter_mut() {
-            let y = p.y as f32 - cy;
-            let x = p.x as f32 - cx;
-            p.x = (y + cx).round() as i32;
-            p.y = (-x + cy).round() as i32;
         }
 
         rv
@@ -380,15 +361,5 @@ impl Game {
         }
 
         game_finished(&self.grid)
-    }
-
-    pub fn generate_qrcode(&mut self) -> String {
-        return qrcode_generator::to_svg_to_string_from_str(
-            self.inputs.clone(),
-            QrCodeEcc::Low,
-            1024,
-            Some("QR Code"),
-        )
-        .unwrap();
     }
 }
