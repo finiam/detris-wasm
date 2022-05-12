@@ -1,8 +1,8 @@
 mod utils;
 
+use rand::distributions::{Distribution, Uniform};
 use utils::set_panic_hook;
 use wasm_bindgen::prelude::*;
-use rand::distributions::{Distribution, Uniform};
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -154,16 +154,17 @@ impl Block {
 
     fn random() -> Block {
         let idx = rand_int(7);
-        let typ = &[
-            BlockType::I,
-            BlockType::O,
-            BlockType::T,
-            BlockType::S,
-            BlockType::Z,
-            BlockType::J,
-            BlockType::L,
-        ][idx];
-        Block::new(&typ)
+        Block::new(
+            &[
+                BlockType::I,
+                BlockType::O,
+                BlockType::T,
+                BlockType::S,
+                BlockType::Z,
+                BlockType::J,
+                BlockType::L,
+            ][idx],
+        )
     }
 }
 
@@ -171,7 +172,7 @@ fn rand_int(max: usize) -> usize {
     let mut rng = rand::thread_rng();
     let distribution = Uniform::from(0..max);
 
-    return distribution.sample(&mut rng);
+    distribution.sample(&mut rng)
 }
 
 fn step_down(grid: &mut Grid, block: &mut Block) -> bool {
@@ -277,6 +278,12 @@ fn clear_full_lines(score: &mut u64, grid: &mut Grid, tick_delay: &mut u64) {
     }
 }
 
+impl Default for Game {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[wasm_bindgen]
 impl Game {
     pub fn new() -> Game {
@@ -304,7 +311,7 @@ impl Game {
     }
 
     pub fn grid(&self) -> Vec<u8> {
-        self.grid.to_vec().into_iter().flatten().collect()
+        self.grid.iter().copied().flatten().collect()
     }
 
     pub fn draw(&mut self) -> *const u8 {
@@ -333,22 +340,22 @@ impl Game {
         // bit 4 - right-key pressed
 
         if (input_code & 2) != 0 {
-            self.inputs.push_str("W");
+            self.inputs.push('W');
 
             if let Some(new_block) = rotate_left(&self.grid, &self.block) {
                 self.block = new_block;
             }
         }
         if (input_code & 4) != 0 {
-            self.inputs.push_str("S");
+            self.inputs.push('S');
             drop_down(&mut self.grid, &mut self.block);
         }
         if (input_code & 8) != 0 {
-            self.inputs.push_str("A");
+            self.inputs.push('A');
             step_left(&self.grid, &mut self.block);
         }
         if (input_code & 16) != 0 {
-            self.inputs.push_str("D");
+            self.inputs.push('D');
             step_right(&self.grid, &mut self.block);
         }
     }
