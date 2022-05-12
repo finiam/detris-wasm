@@ -195,7 +195,7 @@ import("../pkg/index.js")
         ctx.textAlign = "center";
 
         ctx.fillStyle = "#5ff2ef";
-        ctx.font = `${canvas.width < 350 ? "30px" : "50px"} 'Press Start 2P'`;
+        ctx.font = `${canvas.width < 350 ? "35px" : "50px"} 'Press Start 2P'`;
         ctx.fillText("DETRIS", canvas.width / 2, canvas.height * 0.3);
 
         ctx.fillStyle = "#ff5050";
@@ -205,13 +205,17 @@ import("../pkg/index.js")
         ctx.shadowOffsetX = 4;
         ctx.shadowOffsetY = 4;
         ctx.fillStyle = "#ffffff";
-        ctx.font = "22px 'Press Start 2P'";
-        ctx.fillText(`Score:${score}`, canvas.width / 2, canvas.height * 0.45);
+
+        ctx.font = `${canvas.width < 350 ? "25px" : "30px"} 'Press Start 2P'`;
+        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height * 0.55);
+
+        ctx.font = `${canvas.width < 350 ? "25px" : "30px"} 'Press Start 2P'`;
+        ctx.fillText("SCORE", canvas.width / 2, canvas.height * 0.55 + 60);
+        ctx.font = `${canvas.width < 350 ? "30px" : "40px"} 'Press Start 2P'`;
+        ctx.fillText(score, canvas.width / 2, canvas.height * 0.55 + 120);
 
         ctx.fillStyle = "#ffffff";
-        ctx.font = "10px 'Press Start 2P'";
-
-        ctx.font = "15px 'Press Start 2P'";
+        ctx.font = `${canvas.width < 350 ? "13px" : "15px"} 'Press Start 2P'`;
         ctx.fillText("by finiam", canvas.width / 2, canvas.height * 0.9);
         ctx.shadowOffsetY = 0;
         ctx.shadowOffsetX = 0;
@@ -271,26 +275,9 @@ import("../pkg/index.js")
               last_position: Array.from(game.grid()),
             };
 
-            const moves = document.createElement("textarea");
-            moves.className = "moves-textarea";
-            moves.setAttribute("spellcheck", "false");
-            moves.addEventListener("click", (e) => {
-              e.target.select();
-            });
-            moves.value = inputs.slice(12);
-            document.body.append(moves);
-
-            const nft = document.createElement("textarea");
-            nft.className = "nft-textarea";
-            nft.setAttribute("spellcheck", "false");
-            nft.addEventListener("click", (e) => {
-              e.target.select();
-            });
-            nft.value = (
-              Object.values(last_game_state.colors).join('') +
-              last_game_state.last_position.join('')
-            );
-            document.body.append(nft);
+            // Do something with inputs and last_game_state
+            // Sending messages from iframe to parent
+            // https://gist.github.com/cirocosta/9f730967347faf9efb0b
 
             game.tick_delay = 400;
             game = wasm.Game.new();
