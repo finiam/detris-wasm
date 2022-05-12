@@ -7,24 +7,33 @@ import("../pkg/index.js")
       let inputs = "";
       let qrcode = undefined;
       let last_game_state;
+      let CELL_SIZE;
+      let canvas;
 
-      let CELL_SIZE = Math.min(
-        (window.innerHeight - 75) / 20,
-        (window.innerWidth - 30) / 10
-      );
-      const canvas = document.getElementById("tetris-canvas");
-      canvas.width = 10 * (CELL_SIZE + 2) + 12;
-      canvas.height = 24 * (CELL_SIZE + 2) + 2;
-      canvas.style.marginTop = `${-4 * (CELL_SIZE + 2)}px`;
-      let negativeMargin = CELL_SIZE * -4;
-      document.body.style.transform = `translateY(${negativeMargin}px)`;
-      document.body.style.marginBottom = `${negativeMargin}px`;
+      function updateSizes() {
+        CELL_SIZE = Math.min(
+          (window.innerHeight - 75) / 20,
+          (window.innerWidth - 30) / 10
+        );
+        const wrapperEl = document.querySelector("#wrapper");
 
-      const wrapperEl = document.querySelector("#wrapper");
+        wrapperEl.style.width = `${10 * (CELL_SIZE + 2) + 8}px`;
+        wrapperEl.style.height = `${20 * (CELL_SIZE + 2) + 6}px`;
+        wrapperEl.style.top = `${4 * (CELL_SIZE + 2) + 2}px`;
 
-      wrapperEl.style.width = `${10 * (CELL_SIZE + 2) + 8}px`;
-      wrapperEl.style.height = `${20 * (CELL_SIZE + 2) + 6}px`;
-      wrapperEl.style.top = `${4 * (CELL_SIZE + 2) + 2}px`;
+        canvas = document.getElementById("tetris-canvas");
+        canvas.width = 10 * (CELL_SIZE + 2) + 12;
+        canvas.height = 24 * (CELL_SIZE + 2) + 2;
+        canvas.style.marginTop = `${-4 * (CELL_SIZE + 2)}px`;
+        let negativeMargin = CELL_SIZE * -4;
+        document.body.style.transform = `translateY(${negativeMargin}px)`;
+        document.body.style.marginBottom = `${negativeMargin}px`;
+        document.body.style.setProperty("--top", `${4 * (CELL_SIZE + 2) - 4}px`);
+
+        wrapperEl.style.display = "block";
+      }
+
+      updateSizes();
 
       const ctx = canvas.getContext("2d");
 
@@ -39,15 +48,7 @@ import("../pkg/index.js")
         7: "#64CA81", // "#ed7a5f", // "#569f1b",
       };
 
-      window.addEventListener("resize", (_e) => {
-        CELL_SIZE = Math.min(
-          (window.innerHeight - 75) / 20,
-          (window.innerWidth - 20) / 10
-        );
-        canvas.width = 10 * (CELL_SIZE + 2) + 2;
-        canvas.height = 24 * (CELL_SIZE + 2) + 2;
-        canvas.marginTop = `${CELL_SIZE * -4}px`;
-      });
+      window.addEventListener("resize", updateSizes);
 
       document.addEventListener("keypress", (e) => {
         switch (e.code) {
@@ -199,7 +200,7 @@ import("../pkg/index.js")
         ctx.fillText("DETRIS", canvas.width / 2, canvas.height * 0.3);
 
         ctx.fillStyle = "#ff5050";
-        ctx.fillText("DETRIS", canvas.width / 2 - 8, canvas.height * 0.3 - 4);
+        ctx.fillText("DETRIS", canvas.width / 2 - 4, canvas.height * 0.3 - 4);
 
         ctx.shadowColor = 'black';
         ctx.shadowOffsetX = 4;
