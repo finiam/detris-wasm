@@ -37,7 +37,6 @@
         box-shadow: inset 10px 10px 0 -5px #fff,inset -2px -2px 0 3px #fff;
         animation: glow 4s ease infinite alternate-reverse;
         position: relative;
-        margin: auto;
         background: #252a3d;
         border-radius: 10px;
         overflow: hidden;
@@ -50,9 +49,18 @@
     <title>DETRIS!</title>
   </head>
   <body>
-    <div id="wrapper">
-      <canvas id="tetris-canvas" style="margin-left: auto; margin-right: auto; display: block"></canvas>
+    <div id="container" style="height: 100%; display: flex; justify-content: center;">
+      <div id="score-wrapper" style="position: relative; top: var(--top);">
+        <canvas id="score-canvas" style="margin-left: auto; margin-right: auto; display: block;"></canvas>
+      </div>
+      <div id="wrapper">
+        <canvas id="tetris-canvas" style="margin-left: auto; margin-right: auto; display: block"></canvas>
+      </div>
+      <div id="next-piece-wrapper" style="position: relative; top: var(--top);">
+        <canvas id="info-canvas" style="margin-left: auto; margin-right: auto; display: block;"></canvas>
+      </div>
     </div>
+
     <script src="index.js"></script>
   </body>
 </html>

@@ -24,6 +24,7 @@ pub struct Game {
     screen: [u8; 10 * 24],
     grid: Grid,
     block: Block,
+    next_piece: Block,
     tick_delay: u64,
     inputs: String,
     score: u64,
@@ -53,7 +54,7 @@ impl Block {
     fn rotate_i(&self) -> Block {
         let mut rb = self.clone();
 
-        if rb.cells[0].y == 0 {
+        if rb.cells[3].y == 1 {
             rb.cells = [
                 Point { x: 0, y: 0 },
                 Point { x: 0, y: 1 },
@@ -429,6 +430,7 @@ impl Game {
             screen: [0; 240],
             grid: [[0; 10]; 24],
             block: Block::random(),
+            next_piece: Block::random(),
             tick_delay: 400,
             inputs: "Move order: ".to_string(),
             score: 0,
@@ -445,6 +447,17 @@ impl Game {
 
     pub fn score(&self) -> u64 {
         self.score
+    }
+
+    pub fn next_piece(&mut self) -> Vec<u8> {
+        let mut piece: [[u8; 3]; 4] = [[0; 3]; 4];
+        for p in self.next_piece.cells.iter() {
+            let x = p.x as usize;
+            let y = p.y as usize;
+            piece[y][x] = self.next_piece.color_code;
+        }
+
+        piece.iter().copied().flatten().collect()
     }
 
     pub fn grid(&self) -> Vec<u8> {
@@ -501,7 +514,8 @@ impl Game {
         if !step_down(&mut self.grid, &mut self.block) {
             clear_full_lines(&mut self.score, &mut self.grid, &mut self.tick_delay);
 
-            self.block = Block::random();
+            self.block = self.next_piece.clone();
+            self.next_piece = Block::random();
         }
 
         game_finished(&self.grid)
