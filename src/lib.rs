@@ -35,9 +35,10 @@ struct Block {
     position: Point,
     cells: [Point; 4],
     color_code: u8,
+    block_type: BlockType,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 enum BlockType {
     I,
     O,
@@ -49,7 +50,136 @@ enum BlockType {
 }
 
 impl Block {
+    fn rotate_i(&self) -> Block {
+        let mut rb = self.clone();
+
+        if rb.cells[0].y == 0 {
+            rb.cells = [
+                Point { x: 0, y: 0 },
+                Point { x: 0, y: 1 },
+                Point { x: 0, y: 2 },
+                Point { x: 0, y: 3 },
+            ];
+
+            rb.position.x = self.position.x + 1;
+        } else {
+            rb.cells = [
+                Point { x: 0, y: 1 },
+                Point { x: 1, y: 1 },
+                Point { x: 2, y: 1 },
+                Point { x: 3, y: 1 },
+            ];
+
+            rb.position.x = self.position.x - 1;
+        }
+
+        rb
+    }
+
+    fn rotate_t(&self) -> Block {
+        let mut rb = self.clone();
+
+        rb.cells = match rb.cells[3] {
+            Point { x: 1, y: 1 } => [
+                Point { x: 0, y: 0 },
+                Point { x: 0, y: 1 },
+                Point { x: 1, y: 1 },
+                Point { x: 0, y: 2 },
+            ],
+            Point { x: 0, y: 2 } => [
+                Point { x: 1, y: 0 },
+                Point { x: 0, y: 1 },
+                Point { x: 1, y: 1 },
+                Point { x: 2, y: 1 },
+            ],
+            Point { x: 2, y: 1 } => [
+                Point { x: 2, y: 0 },
+                Point { x: 2, y: 1 },
+                Point { x: 1, y: 1 },
+                Point { x: 2, y: 2 },
+            ],
+            Point { x: 2, y: 2 } => [
+                Point { x: 0, y: 0 },
+                Point { x: 1, y: 0 },
+                Point { x: 2, y: 0 },
+                Point { x: 1, y: 1 },
+            ],
+            _ => [
+                Point { x: 0, y: 0 },
+                Point { x: 0, y: 1 },
+                Point { x: 1, y: 1 },
+                Point { x: 0, y: 2 },
+            ],
+        };
+
+        rb
+    }
+
+    fn rotate_s(&self) -> Block {
+        let mut rb = self.clone();
+
+        rb.cells = match rb.cells[0] {
+            Point { x: 2, y: 0 } => [
+                Point { x: 1, y: 0 },
+                Point { x: 1, y: 1 },
+                Point { x: 2, y: 1 },
+                Point { x: 2, y: 2 },
+            ],
+            Point { x: 1, y: 0 } => [
+                Point { x: 2, y: 0 },
+                Point { x: 1, y: 0 },
+                Point { x: 1, y: 1 },
+                Point { x: 0, y: 1 },
+            ],
+            _ => [
+                Point { x: 2, y: 0 },
+                Point { x: 1, y: 0 },
+                Point { x: 1, y: 1 },
+                Point { x: 0, y: 1 },
+            ],
+        };
+
+        rb
+    }
+
+    fn rotate_z(&self) -> Block {
+        let mut rb = self.clone();
+
+        rb.cells = match rb.cells[0] {
+            Point { x: 0, y: 2 } => [
+                Point { x: 2, y: 1 },
+                Point { x: 1, y: 1 },
+                Point { x: 1, y: 0 },
+                Point { x: 0, y: 0 },
+            ],
+            Point { x: 2, y: 1 } => [
+                Point { x: 0, y: 2 },
+                Point { x: 0, y: 1 },
+                Point { x: 1, y: 1 },
+                Point { x: 1, y: 0 },
+            ],
+            _ => [
+                Point { x: 2, y: 1 },
+                Point { x: 1, y: 1 },
+                Point { x: 1, y: 0 },
+                Point { x: 0, y: 0 },
+            ],
+        };
+
+        rb
+    }
+
     fn rotate_left(&self) -> Block {
+        match self.block_type {
+            BlockType::I => self.rotate_i(),
+            BlockType::T => self.rotate_t(),
+            BlockType::S => self.rotate_s(),
+            BlockType::Z => self.rotate_z(),
+            BlockType::J | BlockType::L | BlockType::O => self.rotate(),
+        }
+    }
+
+    fn rotate(&self) -> Block {
         let cx: f32 =
             ((self.cells[0].x + self.cells[1].x + self.cells[2].x + self.cells[3].x) as f32) / 4.0;
         let cy: f32 =
@@ -75,10 +205,10 @@ impl Block {
         self.position.y += offset.y;
     }
 
-    fn new(typ: &BlockType) -> Block {
+    fn new(block_type: &BlockType) -> Block {
         let position = Point { x: 4, y: 0 };
 
-        match typ {
+        match block_type {
             BlockType::I => Block {
                 position,
                 cells: [
@@ -88,6 +218,7 @@ impl Block {
                     Point { x: 0, y: 3 },
                 ],
                 color_code: 1u8,
+                block_type: BlockType::I,
             },
             BlockType::O => Block {
                 position,
@@ -98,6 +229,7 @@ impl Block {
                     Point { x: 1, y: 0 },
                 ],
                 color_code: 2u8,
+                block_type: BlockType::O,
             },
             BlockType::T => Block {
                 position,
@@ -108,6 +240,7 @@ impl Block {
                     Point { x: 1, y: 1 },
                 ],
                 color_code: 3u8,
+                block_type: BlockType::T,
             },
             BlockType::S => Block {
                 position,
@@ -118,6 +251,7 @@ impl Block {
                     Point { x: 0, y: 1 },
                 ],
                 color_code: 4u8,
+                block_type: BlockType::S,
             },
             BlockType::Z => Block {
                 position,
@@ -128,6 +262,7 @@ impl Block {
                     Point { x: 0, y: 0 },
                 ],
                 color_code: 5u8,
+                block_type: BlockType::Z,
             },
             BlockType::J => Block {
                 position,
@@ -138,6 +273,7 @@ impl Block {
                     Point { x: 0, y: 2 },
                 ],
                 color_code: 6u8,
+                block_type: BlockType::J,
             },
             BlockType::L => Block {
                 position,
@@ -148,6 +284,7 @@ impl Block {
                     Point { x: 1, y: 2 },
                 ],
                 color_code: 7u8,
+                block_type: BlockType::L,
             },
         }
     }
