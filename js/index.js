@@ -98,18 +98,6 @@ import("../pkg/index.js")
         }
       });
 
-      function paintNextPiece(color, xx, yy) {
-        if (color && color !== "#000000") {
-          ctxInfo.fillStyle = color;
-          ctxInfo.fillRect(
-            xx,
-            yy,
-            CELL_SIZE,
-            CELL_SIZE
-          );
-        }
-      }
-
       function paintPieces(color, xx, yy, nextPiece = false) {
         const context = nextPiece ? ctxInfo : ctx;
         if (color && color !== "#000000") {
