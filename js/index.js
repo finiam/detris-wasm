@@ -9,7 +9,9 @@ import("../pkg/index.js")
       let last_game_state;
       let CELL_SIZE;
       let canvas;
-      let infoCanvas
+      let infoCanvas;
+      let finishedMessageSent = false;
+      let startedMessageSent = false;
 
       function updateSizes() {
         const container = document.querySelector("#container");
@@ -101,7 +103,7 @@ import("../pkg/index.js")
       function paintPieces(color, xx, yy, nextPiece = false) {
         const context = nextPiece ? ctxInfo : ctx;
         if (color && color !== "#000000") {
-        //   // No Borders
+          // No Borders
           context.fillStyle = color;
           context.fillRect(
             xx,
@@ -138,17 +140,36 @@ import("../pkg/index.js")
           //   CELL_SIZE,
           //   CELL_SIZE
           // );
+
+          // White | Inverted
+          // context.fillStyle = "black";
+          // context.fillRect(
+          //   xx,
+          //   yy,
+          //   CELL_SIZE,
+          //   CELL_SIZE
+          // );
         }
 
-        // With borders / White / Inverted
-        // context.fillStyle = color !== "#000000" ? "white" : "#000000";
-        // context.fillStyle = color;
-        // context.fillRect(
-        //   xx,
-        //   yy,
-        //   CELL_SIZE,
-        //   CELL_SIZE
-        // );
+        // With borders
+        // if (!nextPiece) {
+        //   context.fillStyle = color;
+        //   context.fillRect(
+        //     xx,
+        //     yy,
+        //     CELL_SIZE,
+        //     CELL_SIZE
+        //   );
+        // }
+        // else if(nextPiece && color && color !== "#000000") {
+        //   context.fillStyle = color;
+        //   context.fillRect(
+        //     xx,
+        //     yy,
+        //     CELL_SIZE,
+        //     CELL_SIZE
+        //   );
+        // }
       }
 
       function startScreen() {
@@ -182,11 +203,6 @@ import("../pkg/index.js")
         ctx.fillText("Hit space", canvas.width / 2, canvas.height * 0.45);
         ctx.fillText("to start", canvas.width / 2, canvas.height * 0.45 + 30);
 
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = "#ffffff";
-        ctx.font = `${canvas.width < 300 ? "10px" : "15px"} 'Press Start 2P'`;
-        ctx.fillText("by finiam", canvas.width / 2, canvas.height * 0.66);
-
         ctx.shadowOffsetY = 0;
         ctx.shadowOffsetX = 0;
 
@@ -210,6 +226,11 @@ import("../pkg/index.js")
             paintPieces(color, xx, yy);
           }
         }
+
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "#ffffff";
+        ctx.font = `${canvas.width < 300 ? "10px" : "15px"} 'Press Start 2P'`;
+        ctx.fillText("by finiam", canvas.width / 2, canvas.height * 0.66);
       }
 
       function endScreen() {
@@ -245,8 +266,12 @@ import("../pkg/index.js")
       }
 
       function draw() {
-        if (status == "play" && document.querySelector("textarea")) {
-          document.querySelector("textarea").remove();
+        if (status == "play") {
+          if (!startedMessageSent) {
+            startedMessageSent = true;
+            finishedMessageSent = false;
+            parent.postMessage("started", "*");
+          }
         }
 
         if (status === "begin") {
@@ -283,6 +308,7 @@ import("../pkg/index.js")
         const nextPiece = Array.from(nextPiecePtr);
 
         ctxInfo.fillStyle = "white";
+        ctxInfo.shadowBlur = 0;
         ctxInfo.font = `${CELL_SIZE * 0.5}px 'Press Start 2P'`;
         ctxInfo.fillText("NEXT", CELL_SIZE, CELL_SIZE * 2);
 
@@ -326,9 +352,11 @@ import("../pkg/index.js")
               last_position: Array.from(game.grid()),
             };
 
-            // Do something with inputs and last_game_state
-            // Sending messages from iframe to parent
-            // https://gist.github.com/cirocosta/9f730967347faf9efb0b
+            if (!finishedMessageSent) {
+              finishedMessageSent = true;
+              startedMessageSent = false;
+              parent.postMessage("finished", "*");
+            }
 
             game.tick_delay = 400;
             game = wasm.Game.new();
